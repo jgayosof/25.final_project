@@ -13,13 +13,22 @@ We want to answer the question of *if a match between two teams in the first pha
 For this project we will use the dataset provided by the user **martj42** in the plataform Kaggle. The dataset is named **results.csv**[^1] and you can find it [here](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017?select=shootouts.csv).
 
 [^1]: The information about the features in the dataset is available in the EDA. 
-## Third: Exploratory Data Analysis :mag:
 
-## Fourth: 4. Data Preprocessing :memo::pencil:
+## Third : Exploratory Data Analysis :mag:
+The EDA could be found [here](src/explore.ipynb).
+
+## Fourth: 4. Data Preprocessing :memo:
+
+The data processing could be found [here](src/explore.ipynb) and in a rawest version [here](src/app.py).
 
 ## Fifth: 5. Model and results :briefcase:
 
+The model and results could be found [here](src/explore.ipynb) and in a rawest version.
+
 ## Sixth: 6. Deployment :rocket:
+
+
+##
 
 > Group members: :mate:
 - @jgayosof
