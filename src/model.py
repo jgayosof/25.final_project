@@ -144,7 +144,7 @@ score = model_GB.score(X_test, y_test)
 print(f'The score for Gradient Boosting with X_test & y_test is: {score}')
 
 # Tree params
-print(f'GBoost params: \n {model_GB.get_params()}')
+print(f'GBoost params: \n {model_GB.get_params()} \n')
 
 # We save the model with joblib
 dirname = os.path.dirname(__file__)
@@ -156,7 +156,7 @@ joblib.dump(model_GB, filename)
 ##############
 # Prediction #
 ##############
-match = [1, 2022, 'Qatar', 'Uruguay', 'WC']
+match = [1, 2022, 'Brazil', 'Cameroon', 'WC']
 
 # If 'home_team' == 'Qatar': neutral=False, else neutral=True
 if match[2] == 'Qatar' :
@@ -165,5 +165,22 @@ else :
   match[0] = 1
 
 match[2], match[3], match[4] = teams_points[match[2]], teams_points[match[3]], tournament_points[match[4]]
+#print(f'Prediction for match {match} is {model_GB.predict([match])}')
 
-print(f'Prediction for match {match} is {model_GB.predict([match])}')
+# predict group results:
+def predict_group(group : list) :
+  for i in range(4) :
+    for j in range(i+1,4) :
+      match = [1, 2002, group[i], group[j], 'WC']
+      print(f'{match}')
+      if match[2] == 'Qatar' :
+        match[0] = 0
+      else :
+        match[0] = 1
+      match[2], match[3], match[4] = teams_points[match[2]], teams_points[match[3]], tournament_points[match[4]]
+      print(f'Prediction for match {match} {group[i]} vs {group[j]} is: {model_GB.predict([match])}')
+
+# predict all_group results:
+all_groups = [group_A, group_B, group_C, group_D, group_E, group_F, group_G, group_H]
+for group in all_groups:
+  predict_group(group)
