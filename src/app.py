@@ -6,11 +6,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.model_selection import GridSearchCV
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report, make_scorer
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import confusion_matrix, classification_report
 
 # Reading the dataset
 df_raw = pd.read_csv("../data/raw/results.csv")
@@ -98,7 +95,8 @@ df['tournament'] = df['tournament'].apply(lambda x: x if x not in WC  else 'WC')
 df['tournament'] = df['tournament'].apply(lambda x: x if x not in Cups else 'Cups')
 df['tournament'] = df['tournament'].apply(lambda x: x if x in NoOthers else 'Others')
 # We map the data using the groups clasification and using the FIFA Ranking Procedures - importance of match we set the weight for each group.
-df['tournament_point'] = df['tournament'].map({'Friendly':10, 'Qualifications':25, 'Cups':20, 'WC':55, 'Others':8})
+tournament_points = {'Friendly':10, 'Qualifications':25, 'Cups':20, 'WC':55, 'Others':8}
+df['tournament_points'] = df['tournament'].map(tournament_points)
 # Drop the column not useful anymore
 df = df.drop(['tournament'], axis=1)
 
@@ -106,10 +104,13 @@ df = df.drop(['tournament'], axis=1)
 # Setting the match winner using the goal difference
 df['match_result'] = np.where(df['home_score'] - df['away_score'] > 0, 'WIN', np.where(df['home_score'] - df['away_score'] < 0, 'LOSE', 'DRAW'))
 # Drop the column not useful anymore
-df = df.drop(['home_score',	'away_score' ], axis=1)
+df = df.drop(['home_score', 'away_score' ], axis=1)
 
 ##### Neutral result feature #####
 df ['neutral'] = df['neutral'].map({True: 1, False: 0})
+
+# dump final csv
+df.to_csv('../data/processed/results_processed.csv')
 
 #####################
 # Model and results #
@@ -132,30 +133,37 @@ model_GB.fit(X_train, y_train)
 # Metrics & Results:
 y_pred = model_GB.predict(X_test)
 
-cm = confusion_matrix(y_pred, y_test)
-
-plt.figure(figsize=(12,12))
-sns.heatmap(cm, annot=True, cmap='YlGnBu', linecolor='black', linewidths=1)
-plt.title("Confusion Matrix for match_result")
-plt.xlabel("Real")
-plt.ylabel("Predicted")
-plt.show()
-
-print(f'CLASSIFICATION REPORT: goal_difference \n {classification_report(y_test, y_pred)}')
+print(f'CLASSIFICATION REPORT: match_result \n {classification_report(y_test, y_pred)}')
 
 # Get the score of train data just to verify its 1.
 score = model_GB.score(X_train, y_train)
-print(f'The score for Decision Tree with X_train & y_train is: {score}')
+print(f'The score for Gradient Boosting with X_train & y_train is: {score}')
 
 #Get the score for the predictions:
 score = model_GB.score(X_test, y_test)
-print(f'The score for Decision Tree with X_test & y_test is: {score}')
+print(f'The score for Gradient Boosting with X_test & y_test is: {score}')
 
 # Tree params
-print(f'Tree params: \n {model_GB.get_params()}')
+print(f'GBoost params: \n {model_GB.get_params()}')
 
 # We save the model with joblib
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname, '../data/processed/GB_WC-predictions.pkl')
 
 joblib.dump(model_GB, filename)
+
+
+##############
+# Prediction #
+##############
+match = [1, 2022, 'Qatar', 'Uruguay', 'WC']
+
+# If 'home_team' == 'Qatar': neutral=False, else neutral=True
+if match[2] == 'Qatar' :
+  match[0] = 0
+else :
+  match[0] = 1
+
+match[2], match[3], match[4] = teams_points[match[2]], teams_points[match[3]], tournament_points[match[4]]
+
+print(f'Prediction for match {match} is {model_GB.predict([match])}')
