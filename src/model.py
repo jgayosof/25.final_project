@@ -148,7 +148,7 @@ print(f'GBoost params: \n {model_GB.get_params()} \n')
 
 # We save the model with joblib
 dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, '../data/processed/GB_WC-predictions.pkl')
+filename = os.path.join(dirname, '../models/GB_WC.pkl')
 
 joblib.dump(model_GB, filename)
 
