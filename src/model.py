@@ -1,13 +1,13 @@
 ############ ML final project ############
-import joblib
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import os
+import joblib
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import classification_report
 
 # Reading the dataset
 df_raw = pd.read_csv("../data/raw/results.csv")
@@ -17,9 +17,7 @@ df = df_raw.copy()
 ######################
 # Data Preprocessing #
 ######################
-
 ##### Date feature #####
-
 # We split the date and store the year information in another column
 df["year"]=pd.DatetimeIndex(df["date"]).year
 # Date feature format to datetime (format: YEAR-MONTH-DAY --> %Y-%m-%d)
@@ -115,7 +113,6 @@ df.to_csv('../data/processed/results_processed.csv')
 #####################
 # Model and results #
 #####################
-
 # train-test split: train: before 2018(Russia WC), test: after 2018 (including WC)
 Train = df[df['year'] < 2018]
 Test = df[df['year'] >= 2018]
