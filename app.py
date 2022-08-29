@@ -22,7 +22,7 @@ home_team = st.selectbox('Select "Home Team"', all_teams, key='home_team')
 away_team = st.selectbox('Select "Away Team"', all_teams, key='away_team')
 
 
-model = pickle.load(open('GB_WC', 'rb'))
+model = pickle.load(open('GB_WC.pkl', 'rb'))
 teams_points = {'Argentina' : 1770.65, 'Australia' : 1483.73, 
                 'Belgium': 1821.92, 'Brazil' : 1837.56, 'Cameroon' : 1484.95, 
                 'Canada' : 1473.82, 'Costa Rica' : 1500.06, 'Croatia' : 1632.15, 
