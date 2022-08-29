@@ -37,7 +37,8 @@ teams_points = {'Argentina' : 1770.65, 'Australia' : 1483.73,
                 'United States' : 1635.01, 'Uruguay' : 1643.71, 
                 'Wales' : 1582.13}
 
-match = []
+# complete with default match data: neutral=1, year=2022, and WC=55
+match = [1, 2022, home_team, away_team, 55]
 # If 'home_team' == 'Qatar': neutral=False, else neutral=True
 if home_team == 'Qatar' :
   match[0] = 0
@@ -45,10 +46,7 @@ else :
   match[0] = 1
 
 # complete match data with year=2022, and WC=55
-match[1] = 2022
-match[2] = teams_points[home_team]
-match[3] = teams_points[away_team]
-match[4] = 55
+match[2], match[3] = teams_points[home_team], teams_points[away_team]
 
 #print(f'match: {match}')
 
