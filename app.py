@@ -1,29 +1,23 @@
-from multiprocessing.connection import answer_challenge
 import pickle
-from unittest import result
 import pandas as pd
 import numpy as np
 import streamlit as st
 
 
-### FRONTEND ###
-# We define the groups and teams for Qatar 2022
-group_A = ['Qatar', 'Ecuador', 'Senegal', 'Netherlands']
-group_B = ['England', 'Iran', 'United States', 'Wales']
-group_C = ['Argentina', 'Saudi Arabia', 'Mexico', 'Poland']
-group_D = ['France', 'Denmark', 'Tunisia', 'Australia']
-group_E = ['Spain', 'Germany', 'Japan', 'Costa Rica']
-group_F = ['Belgium', 'Canada', 'Morocco', 'Croatia' ]
-group_G = ['Brazil', 'Serbia', 'Switzerland', 'Cameroon']
-group_H = ['Portugal', 'Ghana', 'Uruguay', 'South Korea']
-all_teams = group_A + group_B + group_C + group_D + group_E + group_F + group_G + group_H
+@st.cache
+def load_data() :
+    # We define the groups and teams for Qatar 2022:
+    group_A = ['Qatar', 'Ecuador', 'Senegal', 'Netherlands']
+    group_B = ['England', 'Iran', 'United States', 'Wales']
+    group_C = ['Argentina', 'Saudi Arabia', 'Mexico', 'Poland']
+    group_D = ['France', 'Denmark', 'Tunisia', 'Australia']
+    group_E = ['Spain', 'Germany', 'Japan', 'Costa Rica']
+    group_F = ['Belgium', 'Canada', 'Morocco', 'Croatia' ]
+    group_G = ['Brazil', 'Serbia', 'Switzerland', 'Cameroon']
+    group_H = ['Portugal', 'Ghana', 'Uruguay', 'South Korea']
+    all_teams = group_A + group_B + group_C + group_D + group_E + group_F + group_G + group_H
 
-home_team = st.selectbox('Select "Home Team"', all_teams, key='home_team')
-away_team = st.selectbox('Select "Away Team"', all_teams, key='away_team')
-
-
-model = pickle.load(open('GB_WC.pkl', 'rb'))
-teams_points = {'Argentina' : 1770.65, 'Australia' : 1483.73, 
+    teams_points = {'Argentina' : 1770.65, 'Australia' : 1483.73, 
                 'Belgium': 1821.92, 'Brazil' : 1837.56, 'Cameroon' : 1484.95, 
                 'Canada' : 1473.82, 'Costa Rica' : 1500.06, 'Croatia' : 1632.15, 
                 'Denmark' : 1665.47, 'Ecuador' : 1463.74, 'England' : 1737.46, 
@@ -36,6 +30,18 @@ teams_points = {'Argentina' : 1770.65, 'Australia' : 1483.73,
                 'Switzerland' : 1621.43, 'Tunisia' : 1507.86, 
                 'United States' : 1635.01, 'Uruguay' : 1643.71, 
                 'Wales' : 1582.13}
+
+    # load the pickle model:
+    model = pickle.load(open('GB_WC.pkl', 'rb'))
+
+    # return:
+    return teams_points, all_teams, model
+
+teams_points, all_teams, model = load_data()
+
+home_team = st.selectbox('Select "Home Team"', all_teams, key='home_team')
+away_team = st.selectbox('Select "Away Team"', all_teams, key='away_team')
+
 
 # complete with default match data: neutral=1, year=2022, and WC=55
 match = [1, 2022, home_team, away_team, 55]
