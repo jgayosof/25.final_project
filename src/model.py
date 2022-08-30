@@ -1,6 +1,7 @@
 ############ ML final project ############
 import os
 import joblib
+import pickle
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -50,7 +51,7 @@ all_teams=group_A +group_B +group_C +group_D +group_E +group_F +group_G +group_H
 df.drop(df[~df['home_team'].isin(all_teams)].index, inplace = True)
 df.drop(df[~df['away_team'].isin(all_teams)].index, inplace = True)
 # Encode the teams by FIFA Ranking at 23th of june 2022
-teams_points = {'Argentina' : 1770.65, 'Australia' : 1483.73, 
+team_points = {'Argentina' : 1770.65, 'Australia' : 1483.73, 
                 'Belgium': 1821.92, 'Brazil' : 1837.56, 'Cameroon' : 1484.95, 
                 'Canada' : 1473.82, 'Costa Rica' : 1500.06, 'Croatia' : 1632.15, 
                 'Denmark' : 1665.47, 'Ecuador' : 1463.74, 'England' : 1737.46, 
@@ -64,8 +65,8 @@ teams_points = {'Argentina' : 1770.65, 'Australia' : 1483.73,
                 'United States' : 1635.01, 'Uruguay' : 1643.71, 
                 'Wales' : 1582.13}
 # Map the countries ranking points
-df ['h_team_points'] = df['home_team'].map(teams_points)
-df ['a_team_points'] = df['away_team'].map(teams_points)
+df ['h_team_points'] = df['home_team'].map(team_points)
+df ['a_team_points'] = df['away_team'].map(team_points)
 # Drop the columns not useful anymore
 df = df.drop(['country', 'city', 'home_team', 'away_team'], axis=1)
 
@@ -143,12 +144,12 @@ print(f'The score for Gradient Boosting with X_test & y_test is: {score}')
 # Tree params
 print(f'GBoost params: \n {model_GB.get_params()} \n')
 
-# We save the model with joblib
+# save the model:
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname, '../models/GB_WC.pkl')
+pickle.dump(model_GB, open(filename, 'wb'))
 
-joblib.dump(model_GB, filename)
-
+model = pickle.load(open(filename, 'rb'))
 
 ##############
 # Prediction #
@@ -161,7 +162,7 @@ if match[2] == 'Qatar' :
 else :
   match[0] = 1
 
-match[2], match[3], match[4] = teams_points[match[2]], teams_points[match[3]], tournament_points[match[4]]
+match[2], match[3], match[4] = team_points[match[2]], team_points[match[3]], tournament_points[match[4]]
 #print(f'Prediction for match {match} is {model_GB.predict([match])}')
 
 # predict group results:
@@ -174,8 +175,8 @@ def predict_group(group : list) :
         match[0] = 0
       else :
         match[0] = 1
-      match[2], match[3], match[4] = teams_points[match[2]], teams_points[match[3]], tournament_points[match[4]]
-      print(f'Prediction for match {match} {group[i]} vs {group[j]} is: {model_GB.predict([match])}')
+      match[2], match[3], match[4] = team_points[match[2]], team_points[match[3]], tournament_points[match[4]]
+      print(f'Prediction for match {match} {group[i]} vs {group[j]} is: {model.predict([match])}')
 
 # predict all_group results:
 all_groups = [group_A, group_B, group_C, group_D, group_E, group_F, group_G, group_H]
