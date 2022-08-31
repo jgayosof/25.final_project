@@ -7,3 +7,4 @@ sklearn
 
 # Application ---------------------------------
 streamlit
+tabulate

@@ -1,11 +1,10 @@
 ############ ML final project ############
 import os
-import joblib
 import pickle
 import numpy as np
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings('ignore')
 
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import classification_report
@@ -166,19 +165,24 @@ match[2], match[3], match[4] = team_points[match[2]], team_points[match[3]], tou
 #print(f'Prediction for match {match} is {model_GB.predict([match])}')
 
 # predict group results:
-def predict_group(group : list) :
-  for i in range(4) :
-    for j in range(i+1,4) :
-      match = [1, 2002, group[i], group[j], 'WC']
-      print(f'{match}')
+all_groups = [group_A, group_B, group_C, group_D, group_E, group_F, group_G, group_H]
+for group in all_groups:
+  group_i = dict((team, 0) for team in group)
+  for i in range(0, 4) :
+    for j in range(i+1, 4) :
+      match = [1, 2002, group[i], group[j], 55]
       if match[2] == 'Qatar' :
         match[0] = 0
       else :
         match[0] = 1
-      match[2], match[3], match[4] = team_points[match[2]], team_points[match[3]], tournament_points[match[4]]
-      print(f'Prediction for match {match} {group[i]} vs {group[j]} is: {model.predict([match])}')
-
-# predict all_group results:
-all_groups = [group_A, group_B, group_C, group_D, group_E, group_F, group_G, group_H]
-for group in all_groups:
-  predict_group(group)
+      match[2], match[3] = team_points[match[2]], team_points[match[3]]
+      match_result = model.predict([match])
+      #print(f'Prediction for match {match} {group[i]} vs {group[j]} is: {match_result}')
+      if match_result == 'WIN':
+        group_i[group[i]] += 3
+      elif match_result == 'LOSE' :
+        group_i[group[j]] += 3
+      else:
+        group_i[group[i]] += 1
+        group_i[group[j]] += 1
+  print(f'results: {group_i} \n')
