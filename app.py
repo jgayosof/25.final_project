@@ -86,9 +86,9 @@ if (home_team != '') :
       st.warning('Please select two different teams.')
     else :
       if same_group(home_team, away_team, all_groups):
-        st.write('Group stage match:')
+        st.subheader(body='Group stage match:', anchor=None)
       else:
-        st.write('This is not a group stage match, anyway:')
+        st.subheader(body='This is not a group stage match, anyway:', anchor=None)
       # complete with default match data: neutral=1, year=2022, and WC=55
       match = [1, 2022, home_team, away_team, 55]
       # If 'away_team' == 'Qatar': swap teams because Qatar is home_team
@@ -111,8 +111,7 @@ if (home_team != '') :
           match_result = f"{away_team} wins."
 
       # Show Prediction on App
-      st.write
-      (match_result)
+      st.subheader(body=match_result, anchor=None)
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -123,7 +122,6 @@ with col2 :
   but = st.button('PREDICT GROUP STAGE', help='Press this button to predict all group results')
   if but :
     group_resuls = group_stage()
-    #st.write(f'Group stage results: {group_resuls}')
     for group in group_resuls :
       group_table = pd.DataFrame(data=group, index=[0]).transpose()
       group_table.columns = ['Points']
