@@ -23,7 +23,7 @@ def group_stage() :
     group_i = dict((team, 0) for team in group)
     for i in range(0, 4) :
       for j in range(i+1, 4) :
-        match = [1, 2002, group[i], group[j], 55]
+        match = [1, 2022, group[i], group[j], 55]
         if match[2] == 'Qatar' :
           match[0] = 0
         else :
@@ -72,7 +72,6 @@ model = pickle.load(open('models/GB_WC.pkl', 'rb'))
 
 st.title('WC Qatar 2022 match predictor')
 
-
 groups = pd.DataFrame(data=[group_A, group_B, group_C, group_D, group_E, group_F, group_G, group_H]).transpose()
 groups.columns = ['Group A', 'Group B', 'Group C', 'Group D',
                   'Group E', 'Group F', 'Group G', 'Group H' ]
@@ -84,12 +83,12 @@ if (home_team != '') :
   
   if (away_team != '') :
     if (away_team == home_team) :
-      st.code('Please select two different teams.')
+      st.warning('Please select two different teams.')
     else :
       if same_group(home_team, away_team, all_groups):
-        st.code('Group stage match:')
+        st.write('Group stage match:')
       else:
-        st.code('This is not a group stage match, anyway:')
+        st.write('This is not a group stage match, anyway:')
       # complete with default match data: neutral=1, year=2022, and WC=55
       match = [1, 2022, home_team, away_team, 55]
       # If 'away_team' == 'Qatar': swap teams because Qatar is home_team
@@ -112,7 +111,8 @@ if (home_team != '') :
           match_result = f"{away_team} wins."
 
       # Show Prediction on App
-      st.code(match_result)
+      st.write
+      (match_result)
 
 col1, col2, col3 = st.columns(3)
 with col1:
