@@ -1,3 +1,4 @@
+import time
 import pickle
 import pandas as pd
 import streamlit as st
@@ -83,12 +84,12 @@ if (home_team != '') :
   
   if (away_team != '') :
     if (away_team == home_team) :
-      st.warning('Please select two different teams.')
+      st.error('Please select two different teams.')
     else :
       if same_group(home_team, away_team, all_groups):
-        st.subheader(body='Group stage match:', anchor=None)
+        st.success(body='Group stage match:')
       else:
-        st.subheader(body='This is not a group stage match, anyway:', anchor=None)
+        st.warning(body='This is not a group stage match, anyway:')
       # complete with default match data: neutral=1, year=2022, and WC=55
       match = [1, 2022, home_team, away_team, 55]
       # If 'away_team' == 'Qatar': swap teams because Qatar is home_team
@@ -111,7 +112,7 @@ if (home_team != '') :
           match_result = f"{away_team} wins."
 
       # Show Prediction on App
-      st.subheader(body=match_result, anchor=None)
+      st.success(body=match_result)
 
 col1, col2, col3 = st.columns(3)
 with col1:
