@@ -1,16 +1,63 @@
 import time
 import pickle
+import operator
 import pandas as pd
 import streamlit as st
 from tabulate import tabulate
 import warnings
+import os
 warnings.filterwarnings('ignore')
+
+###################
+#       Data      #
+###################
 
 @st.cache
 def load_data() :
   #return team_points, all_teams, model
   return 1
 #team_points, all_teams, model = load_data()
+
+# We define the groups and teams for Qatar 2022:
+group_A = ['Qatar', 'Ecuador', 'Senegal', 'Netherlands']
+group_B = ['England', 'Iran', 'United States', 'Wales']
+group_C = ['Argentina', 'Saudi Arabia', 'Mexico', 'Poland']
+group_D = ['France', 'Denmark', 'Tunisia', 'Australia']
+group_E = ['Spain', 'Germany', 'Japan', 'Costa Rica']
+group_F = ['Belgium', 'Canada', 'Morocco', 'Croatia' ]
+group_G = ['Brazil', 'Serbia', 'Switzerland', 'Cameroon']
+group_H = ['Portugal', 'Ghana', 'Uruguay', 'South Korea']
+all_teams = [''] + group_A + group_B + group_C + group_D + group_E + group_F + group_G + group_H
+all_groups = [group_A, group_B, group_C, group_D, group_E, group_F, group_G, group_H]
+
+team_points = {'Argentina' : 1770.65, 'Australia' : 1483.73, 
+            'Belgium': 1821.92, 'Brazil' : 1837.56, 'Cameroon' : 1484.95, 
+            'Canada' : 1473.82, 'Costa Rica' : 1500.06, 'Croatia' : 1632.15, 
+            'Denmark' : 1665.47, 'Ecuador' : 1463.74, 'England' : 1737.46, 
+            'France' : 1764.85, 'Germany' : 1658.96, 'Ghana' : 1389.68, 
+            'Iran' : 1558.64, 'Japan' : 1552.77, 'Mexico' : 1649.57, 
+            'Morocco' : 1558.9, 'Netherlands' : 1679.41, 'Poland' : 1546.18, 
+            'Portugal' : 1678.65, 'Qatar' : 1441.41, 
+            'Saudi Arabia' : 1435.74, 'Senegal' : 1593.45, 
+            'Serbia' : 1549.53, 'South Korea' : 1526.2, 'Spain' : 1716.93, 
+            'Switzerland' : 1621.43, 'Tunisia' : 1507.86, 
+            'United States' : 1635.01, 'Uruguay' : 1643.71, 
+            'Wales' : 1582.13}
+
+groups = pd.DataFrame(data=[group_A, group_B, group_C, group_D, group_E, group_F, group_G, group_H]).transpose()
+groups.columns = ['Group A', 'Group B', 'Group C', 'Group D',
+                  'Group E', 'Group F', 'Group G', 'Group H' ]
+
+####################
+#       Model      #
+####################
+
+# load the model:
+model = pickle.load(open('models/GB_WC.pkl', 'rb'))
+
+####################
+#       Logic      #
+####################
 
 def same_group(home_team:str, away_team:str, all_groups:list):
   for group in all_groups :
@@ -39,48 +86,32 @@ def group_stage() :
         else:
           group_i[group[i]] += 1
           group_i[group[j]] += 1
-    group_results.append(group_i)
+    group_is = dict(sorted(group_i.items(), key=operator.itemgetter(1), reverse=True))
+    group_results.append(group_is)
   return group_results
 
-# We define the groups and teams for Qatar 2022:
-group_A = ['Qatar', 'Ecuador', 'Senegal', 'Netherlands']
-group_B = ['England', 'Iran', 'United States', 'Wales']
-group_C = ['Argentina', 'Saudi Arabia', 'Mexico', 'Poland']
-group_D = ['France', 'Denmark', 'Tunisia', 'Australia']
-group_E = ['Spain', 'Germany', 'Japan', 'Costa Rica']
-group_F = ['Belgium', 'Canada', 'Morocco', 'Croatia' ]
-group_G = ['Brazil', 'Serbia', 'Switzerland', 'Cameroon']
-group_H = ['Portugal', 'Ghana', 'Uruguay', 'South Korea']
-all_teams = [''] + group_A + group_B + group_C + group_D + group_E + group_F + group_G + group_H
-all_groups = [group_A, group_B, group_C, group_D, group_E, group_F, group_G, group_H]
+##########################
+#       Page Design      #
+##########################
 
-team_points = {'Argentina' : 1770.65, 'Australia' : 1483.73, 
-            'Belgium': 1821.92, 'Brazil' : 1837.56, 'Cameroon' : 1484.95, 
-            'Canada' : 1473.82, 'Costa Rica' : 1500.06, 'Croatia' : 1632.15, 
-            'Denmark' : 1665.47, 'Ecuador' : 1463.74, 'England' : 1737.46, 
-            'France' : 1764.85, 'Germany' : 1658.96, 'Ghana' : 1389.68, 
-            'Iran' : 1558.64, 'Japan' : 1552.77, 'Mexico' : 1649.57, 
-            'Morocco' : 1558.9, 'Netherlands' : 1679.41, 'Poland' : 1546.18, 
-            'Portugal' : 1678.65, 'Qatar' : 1441.41, 
-            'Saudi Arabia' : 1435.74, 'Senegal' : 1593.45, 
-            'Serbia' : 1549.53, 'South Korea' : 1526.2, 'Spain' : 1716.93, 
-            'Switzerland' : 1621.43, 'Tunisia' : 1507.86, 
-            'United States' : 1635.01, 'Uruguay' : 1643.71, 
-            'Wales' : 1582.13}
+st.set_page_config(layout='wide')
+col1, col2 = st.columns([10, 20])
+with col1:
+  dirname = os.path.dirname(__file__)
+  image_path = os.path.join(dirname, 'assets/logo-fifa.jpg')
+  st.image(image_path, width=500)
+with col2:
+  st.title('WC Qatar 2022 match predictor')
 
-# load the model:
-model = pickle.load(open('models/GB_WC.pkl', 'rb'))
+with col2:
+  st.dataframe(groups)
 
-st.title('WC Qatar 2022 match predictor')
-
-groups = pd.DataFrame(data=[group_A, group_B, group_C, group_D, group_E, group_F, group_G, group_H]).transpose()
-groups.columns = ['Group A', 'Group B', 'Group C', 'Group D',
-                  'Group E', 'Group F', 'Group G', 'Group H' ]
-st.dataframe(groups)
-
-home_team = st.selectbox('Select team:', all_teams, key='home_team', index=0)
+c1, c2, c3 = st.columns(3)
+with c1:
+  home_team = st.selectbox('Select team:', all_teams, key='home_team', index=0)
 if (home_team != '') :
-  away_team = st.selectbox('Select team:', all_teams, key='away_team', index=0)
+  with c2:
+    away_team = st.selectbox('Select team:', all_teams, key='away_team', index=0)
   
   if (away_team != '') :
     if (away_team == home_team) :
@@ -114,16 +145,29 @@ if (home_team != '') :
       # Show Prediction on App
       st.success(body=match_result)
 
-col1, col2, col3 = st.columns(3)
-with col1:
-    pass
-with col3:
-    pass
-with col2 :
-  but = st.button('PREDICT GROUP STAGE', help='Press this button to predict all group results')
-  if but :
+cl1, cl2, cl3, cl4 = st.columns(4)
+
+with c1:
+  gs = st.button('PREDICT GROUP STAGE', help='Press this button to predict all group results')
+  i =1
+  if gs :
     group_resuls = group_stage()
     for group in group_resuls :
       group_table = pd.DataFrame(data=group, index=[0]).transpose()
       group_table.columns = ['Points']
-      st.dataframe(group_table)
+      if i == 1:
+        with cl1:
+          st.dataframe(group_table)
+          i += 1
+      elif i == 2:
+        with cl2:
+          st.dataframe(group_table)
+          i += 1
+      elif i == 3:
+        with cl3:
+          st.dataframe(group_table)
+          i += 1
+      else:
+        with cl4:
+          st.dataframe(group_table)
+          i = 1
