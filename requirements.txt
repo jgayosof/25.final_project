@@ -1,14 +1,12 @@
 # Base ----------------------------------------
 pandas==1.4.2
 numpy>=1.18.5
-pickle
+pickleshare==0.7.5
 
 # Machine learning ----------------------------
-sklearn
-matplotlib
-seaborn
-matplotlib
+sklearn==0.0
+seaborn==0.11.2
+matplotlib==3.5.2
 
 # Application ---------------------------------
-streamlit
-tabulate
+streamlit==1.12.1
