@@ -98,12 +98,10 @@ st.set_page_config(layout='wide')
 col1, col2 = st.columns([10, 20])
 with col1:
   dirname = os.path.dirname(__file__)
-  image_path = os.path.join(dirname, 'assets/logo-fifa.jpg')
-  st.image(image_path, width=500)
+  image_path = os.path.join(dirname, 'assets/qatar2022.png')
+  st.image(image_path, width=590)
 with col2:
   st.title('WC Qatar 2022 match predictor')
-
-with col2:
   st.dataframe(groups)
 
 c1, c2, c3 = st.columns(3)
