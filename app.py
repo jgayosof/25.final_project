@@ -162,32 +162,40 @@ if gs :
     group_table.columns = ['Points']
     if i == 1 :
       with col1 :
+        st.markdown("<h4 style='text-align:center'>Group A</h4>", unsafe_allow_html=True)
         st.table(group_table)
         i += 1
     elif i == 2 :
       with col2 :
+        st.markdown("<h4 style='text-align:center'>Group B</h4>", unsafe_allow_html=True)
         st.table(group_table)
         i += 1
     elif i == 3 :
       with col3 :
+        st.markdown("<h4 style='text-align:center'>Group C</h4>", unsafe_allow_html=True)
         st.table(group_table)
         i += 1
     elif i == 4 :
       with col4:
+        st.markdown("<h4 style='text-align:center'>Group D</h4>", unsafe_allow_html=True)
         st.table(group_table)
         i += 1
     elif i == 5 :
       with col5 :
+        st.markdown("<h4 style='text-align:center'>Group E</h4>", unsafe_allow_html=True)
         st.table(group_table)
         i += 1
     elif i == 6 :
       with col6 :
+        st.markdown("<h4 style='text-align:center'>Group F</h4>", unsafe_allow_html=True)
         st.table(group_table)
         i += 1
     elif i == 7:
       with col7:
+        st.markdown("<h4 style='text-align:center'>Group G</h4>", unsafe_allow_html=True)
         st.table(group_table)
         i += 1
     else:
       with col8:
+        st.markdown("<h4 style='text-align:center'>Group H</h4>", unsafe_allow_html=True)
         st.table(group_table)
