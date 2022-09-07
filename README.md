@@ -15,22 +15,22 @@ For this project we will use the dataset provided by the user **martj42** in the
 [^1]: The information about the features in the dataset is available in the EDA. 
 
 ## Third : Exploratory Data Analysis :mag:
-The EDA could be found [here](src/explore.ipynb).
+The EDA could be found [here](src/final_project.ipynb).
 
 ## Fourth: 4. Data Preprocessing :memo:
 
-The data processing could be found [here](src/explore.ipynb) and in a rawest version [here](src/app.py).
+The data processing could be found [here](src/final_project.ipynb) and in a rawest version [here](src/model.py).
 
 ## Fifth: 5. Model and results :briefcase:
 
-The model and results could be found [here](src/explore.ipynb) and in a rawest version.
+The model and results could be found [here](src/final_project.ipynb) and in a rawest version [here](src/model.py).
 
 ## Sixth: 6. Deployment :rocket:
 
+The streamlit application code is [here](app.py) and its deploytmen could be found [here](https://wc-predictor.herokuapp.com).
 
 ##
 
 > Group members: :mate:
 - @jgayosof
 - @karenL26
-- @ch4rbo
