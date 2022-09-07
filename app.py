@@ -9,9 +9,15 @@ import os
 warnings.filterwarnings('ignore')
 
 ###################
+#    Constants    #
+###################
+dirname = os.path.dirname(__file__)
+logo = os.path.join(dirname, 'assets/3qatar2022.png')
+leeb = os.path.join(dirname, 'assets/4mascot.png')
+
+###################
 #       Data      #
 ###################
-
 @st.cache
 def load_data() :
   #return team_points, all_teams, model
@@ -51,14 +57,12 @@ groups.columns = ['Group A', 'Group B', 'Group C', 'Group D',
 ####################
 #       Model      #
 ####################
-
 # load the model:
 model = pickle.load(open('models/GB_WC.pkl', 'rb'))
 
 ####################
 #       Logic      #
 ####################
-
 def same_group(home_team:str, away_team:str, all_groups:list):
   for group in all_groups :
     if home_team in group and away_team in group :
@@ -93,24 +97,26 @@ def group_stage() :
 ##########################
 #       Page Design      #
 ##########################
-
 st.set_page_config(layout='wide')
-col1, col2 = st.columns([10, 20])
-with col1:
-  dirname = os.path.dirname(__file__)
-  image_path = os.path.join(dirname, 'assets/logo-fifa.jpg')
-  st.image(image_path, width=500)
-with col2:
-  st.title('WC Qatar 2022 match predictor')
 
-with col2:
+c1, c2, c3 = st.columns([9.2, 11.5, 8])
+with c2 :
+  title = f'<p style="color:#A32618; font-family:sans-serif; font-size:40px;"> <b>WC Qatar 2022 match predictor</b> </p>'
+  st.markdown(title, unsafe_allow_html=True)
+
+cl1, cl2, cl3 = st.columns([8, 11.5, 8])
+with cl1:
+  st.image(logo, width=260)
+with cl2:
   st.dataframe(groups)
+with cl3:
+  st.image(leeb, width=260)
 
-c1, c2, c3 = st.columns(3)
-with c1:
+co1, co2 = st.columns(2)
+with co1:
   home_team = st.selectbox('Select team:', all_teams, key='home_team', index=0)
 if (home_team != '') :
-  with c2:
+  with co2:
     away_team = st.selectbox('Select team:', all_teams, key='away_team', index=0)
   
   if (away_team != '') :
@@ -145,29 +151,43 @@ if (home_team != '') :
       # Show Prediction on App
       st.success(body=match_result)
 
-cl1, cl2, cl3, cl4 = st.columns(4)
+gs = st.button('PREDICT GROUP STAGE', help='Press this button to predict all group results')
 
-with c1:
-  gs = st.button('PREDICT GROUP STAGE', help='Press this button to predict all group results')
+col1, col2, col3, col4, col5, col6, col7, col8  = st.columns(8)
+if gs :
+  group_resuls = group_stage()
   i =1
-  if gs :
-    group_resuls = group_stage()
-    for group in group_resuls :
-      group_table = pd.DataFrame(data=group, index=[0]).transpose()
-      group_table.columns = ['Points']
-      if i == 1:
-        with cl1:
-          st.dataframe(group_table)
-          i += 1
-      elif i == 2:
-        with cl2:
-          st.dataframe(group_table)
-          i += 1
-      elif i == 3:
-        with cl3:
-          st.dataframe(group_table)
-          i += 1
-      else:
-        with cl4:
-          st.dataframe(group_table)
-          i = 1
+  for group in group_resuls :
+    group_table = pd.DataFrame(data=group, index=[0]).transpose()
+    group_table.columns = ['Points']
+    if i == 1 :
+      with col1 :
+        st.table(group_table)
+        i += 1
+    elif i == 2 :
+      with col2 :
+        st.table(group_table)
+        i += 1
+    elif i == 3 :
+      with col3 :
+        st.table(group_table)
+        i += 1
+    elif i == 4 :
+      with col4:
+        st.table(group_table)
+        i += 1
+    elif i == 5 :
+      with col5 :
+        st.table(group_table)
+        i += 1
+    elif i == 6 :
+      with col6 :
+        st.table(group_table)
+        i += 1
+    elif i == 7:
+      with col7:
+        st.table(group_table)
+        i += 1
+    else:
+      with col8:
+        st.table(group_table)
