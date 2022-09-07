@@ -1,9 +1,7 @@
-import time
 import pickle
 import operator
 import pandas as pd
 import streamlit as st
-from tabulate import tabulate
 import warnings
 import os
 warnings.filterwarnings('ignore')
